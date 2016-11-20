@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Grafo {
 	
 	private List<Vertice> vertices;
@@ -20,14 +21,26 @@ public class Grafo {
 		}
 	}
 	
-	public void printCostMatrix(){
+	public String printCostMatrix(){
+		String out = "";
 		for(int i = 0; i < vertices.size(); i++){
 			for(int j = 0; j < vertices.size(); j++){
-				
-				System.out.print(this.getCostMatrix(i,j)+" ");
+				out+=this.getCostMatrix(i,j)+" ";
 			}
-			System.out.println("");
+			out += "\n";
 		}
+		System.out.print(out);
+		return out;
+	}
+	
+	public String printVerticeColors(){
+		String out = "";
+		for(Vertice v : vertices){
+			out += (v.getCor().ordinal()+" ");
+		}
+		out += "\n";
+		System.out.print(out);
+		return out;
 	}
 	
 	public void printInfoSizes(){
@@ -62,6 +75,10 @@ public class Grafo {
 		vertices.add(vertice);
 	}
 
+	public Vertice getVertice(int i) {
+		return vertices.get(i);
+	}
+	
 	public List<Vertice> getVertices() {
 		return vertices;
 	}

@@ -1,4 +1,3 @@
-package br.ufrn.imd;
 
 
 public class EngineBWTSP {
