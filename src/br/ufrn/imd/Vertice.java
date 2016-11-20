@@ -94,8 +94,5 @@ public class Vertice {
 	public String toString() {
 		return "Vertice { "+id+", " + cor + ", visites = " + visites + ", arestas = "+ arestas + " }";
 	}
-	
-	
-	
 
 }
