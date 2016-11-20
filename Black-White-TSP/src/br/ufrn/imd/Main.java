@@ -6,7 +6,9 @@ public class Main {
 		
 		int RAND_MIN_PESO = 5; 
 		int RAND_MAX_PESO = 50; 
-		int MAX_INSTANCE = 13;
+		int MAX_INSTANCE = 15;
+		int MAX_SEQUENCE_WHITE = 1; 
+		int MAX_SEQUENCE_BLACK = 2;
 		
 		Grafo grafo = new Grafo();
 		
@@ -19,7 +21,7 @@ public class Main {
 		
 		grafo.printInfoSizes();
 		
-		EngineBWTSP engineBWTSP= new EngineBWTSP(grafo, MAX_INSTANCE);
+		EngineBWTSP engineBWTSP= new EngineBWTSP(grafo, MAX_SEQUENCE_WHITE, MAX_SEQUENCE_BLACK);
 		
 		ResultBWTSP result = engineBWTSP.calculateBestTour();
 		
