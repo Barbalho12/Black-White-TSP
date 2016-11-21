@@ -13,13 +13,9 @@ public class Main {
 //		int RAND_MIN_PESO = 2; 
 //		int RAND_MAX_PESO = 10; 
 //		int MAX_INSTANCE = 4;
-//		int MAX_SEQUENCE_WHITE = 1; 
-//		int MAX_SEQUENCE_BLACK = 1;
-//		Grafo grafo = new Grafo();
-		//TODO deverá ler de arquivo
-//		generateGrafo(grafo, MAX_INSTANCE, RAND_MIN_PESO, RAND_MAX_PESO);
+//		Grafo grafo = generateGrafo(MAX_INSTANCE, RAND_MIN_PESO, RAND_MAX_PESO);
 		
-		Grafo grafo = readGrafo("data/intance_4_1_1_2_10.txt");
+		Grafo grafo = readGrafo("data/intance_13_3_4_5_40.txt");
 
 		printIntroInformations(grafo.getVertices().size());
 		
@@ -38,12 +34,13 @@ public class Main {
 		
 	}
 	
-//	private static void generateGrafo(Grafo grafo, int MAX_INSTANCE, int RAND_MIN_PESO, int RAND_MAX_PESO) {
+//	private static Grafo generateGrafo(int MAX_INSTANCE, int RAND_MIN_PESO, int RAND_MAX_PESO) {
 //		RandomInterval randCor = new RandomInterval(Cor.BRANCO, Cor.PRETO);
 //		RandomInterval randCost = new RandomInterval(RAND_MIN_PESO, RAND_MAX_PESO);
-//		
+//		Grafo grafo = new Grafo();
 //		for(int i = 0; i < MAX_INSTANCE; i++){
-//			Vertice newVertice = new Vertice(randCor.randCor(), i);
+//			
+//			Vertice newVertice = new Vertice( randCor.randCor(), i);
 //			grafo.addVertice(newVertice);
 //			
 //			for(Vertice v : grafo.getVertices()){
@@ -53,6 +50,7 @@ public class Main {
 //			}
 //		}
 //		grafo.build(); 
+//		return grafo;
 //	}
 
 	public static Grafo readGrafo(String path) {

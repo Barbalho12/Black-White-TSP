@@ -1,11 +1,12 @@
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 public class Main {
 	
-	private static final int LENGHT_ARGS = 5; 		//Argumentos para criação
+	private static final int LENGHT_ARGS = 5; 		//Argumentos para criação de uma instancia
+	private static final int LENGHT_ARGS_N_INSTANCIAS = 1; 		//Argumentos para criação de N instancias 4~N
+	private static final int NO_ARGS_N_INSTANCES = 12; 		//Quantidade de instancias padrão 4~12 
 	private static final int MAX_TENTATIVAS = 100; 	//Maximo de tentativas para geração de uma instancia
 	private static final String PATH_INSTANCE = "instances/";
 	
@@ -15,21 +16,36 @@ public class Main {
 	private static int RAND_MIN_PESO = 2; 			//Peso minimo de aresta
 	private static int RAND_MAX_PESO = 10; 			//peso maximo de aresta
 	
+	private static String namesFiles;
+	
 	public static void main(String[] args){
+		namesFiles = "";
 		
 		if (args.length == LENGHT_ARGS){
-			MAX_INSTANCE = Integer.valueOf(args[0]);
-			MAX_SEQUENCE_WHITE = Integer.valueOf(args[1]); 
-			MAX_SEQUENCE_BLACK = Integer.valueOf(args[2]);
-			RAND_MIN_PESO = Integer.valueOf(args[3]); 
-			RAND_MAX_PESO = Integer.valueOf(args[4]); 
-		}else{
-			MAX_INSTANCE = 4;
-			MAX_SEQUENCE_WHITE = 1; 
-			MAX_SEQUENCE_BLACK = 1;
-			RAND_MIN_PESO = 2; 
-			RAND_MAX_PESO = 10;
+			generateInstance(Integer.valueOf(args[0]),Integer.valueOf(args[1]),Integer.valueOf(args[2]),Integer.valueOf(args[3]),Integer.valueOf(args[4]));
+		}else {
+			int n = NO_ARGS_N_INSTANCES;
+			if (args.length == LENGHT_ARGS_N_INSTANCIAS)
+				n = Integer.valueOf(args[0]);
+			RandomInterval rand = new RandomInterval(2, 5);
+			for(int i = 4; i <= n; i++){
+				generateInstance(i, rand.rand(), rand.rand(), rand.rand(), 40);
+			}
+			
+			
 		}
+		writeFile(PATH_INSTANCE+"names_instances.txt", namesFiles);
+		System.out.println("----END----");
+	}
+	
+	public static void generateInstance(int max_instance, int max_sequence_white, int max_sequence_black, int rand_min_peso, int rand_max_peso){
+
+		MAX_INSTANCE = Integer.valueOf(max_instance);
+		MAX_SEQUENCE_WHITE = Integer.valueOf(max_sequence_white); 
+		MAX_SEQUENCE_BLACK = Integer.valueOf(max_sequence_black);
+		RAND_MIN_PESO = Integer.valueOf(rand_min_peso); 
+		RAND_MAX_PESO = Integer.valueOf(rand_max_peso); 
+
 		
 		Grafo grafo = null;
 		ResultBWTSP result = null;
@@ -60,14 +76,16 @@ public class Main {
 		System.out.println("---------");
 		
 		String nameFile = "intance_"+MAX_INSTANCE+"_"+MAX_SEQUENCE_WHITE+"_"+MAX_SEQUENCE_BLACK+"_"+RAND_MIN_PESO+"_"+RAND_MAX_PESO+".txt";
-		writeFile(PATH_INSTANCE+nameFile, out);
 		
+		writeFile(PATH_INSTANCE+nameFile, out);
+		namesFiles += nameFile + "\n";
+		result.printTime();
 	}
 	
 	
 	private static Grafo generateGrafo(int MAX_INSTANCE, int RAND_MIN_PESO, int RAND_MAX_PESO) {
 		RandomInterval randCor = new RandomInterval(Cor.BRANCO, Cor.PRETO);
-		RandomInterval randCost = new RandomInterval(RAND_MIN_PESO, RAND_MAX_PESO);
+		RandomInterval rand = new RandomInterval(RAND_MIN_PESO, RAND_MAX_PESO);
 		Grafo grafo = new Grafo();
 		for(int i = 0; i < MAX_INSTANCE; i++){
 			
@@ -76,7 +94,7 @@ public class Main {
 			
 			for(Vertice v : grafo.getVertices()){
 				if(!v.equals(newVertice)){
-					newVertice.addAresta(new Aresta(randCost.rand(), v, newVertice));
+					newVertice.addAresta(new Aresta(rand.rand(), v, newVertice));
 				}
 			}
 		}
@@ -85,11 +103,12 @@ public class Main {
 	}
 	
 	static void writeFile(String path, String content){
-		Writer arquivo;
 		try {
-			arquivo = new BufferedWriter(new FileWriter(path, false));
-			arquivo.append(content);
-			arquivo.close();
+			File file = new File(path);
+			file.getParentFile().mkdirs();
+			FileWriter writer = new FileWriter(file);
+			writer.write(content);
+			writer.close();
 		} catch (IOException e) {
 			
 			e.printStackTrace();

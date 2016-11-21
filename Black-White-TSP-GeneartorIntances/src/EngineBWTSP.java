@@ -1,5 +1,6 @@
 
 
+
 public class EngineBWTSP {
 
 	private Grafo grafo;
@@ -38,29 +39,45 @@ public class EngineBWTSP {
 				new NullPointerException();
 			}
 		}
-		
+	}
+	
+	private boolean verifyColor(Vertice currentTour[], int level) {
+		int p = 0;
+		int b = 0;
+		for(int i = 0; i <= level; i++){
+			if(currentTour[i].getCor().equals(Cor.BRANCO)){
+				b++;
+				p=0;
+			}else{
+				p++;
+				b=0;
+			}
+			if(p > maxSequence[1] || b > maxSequence[0])
+				return false;
+		}
+		return true;
 	}
 
 	private void calculateBestTour(int v, int level){
-		grafo.getVertice(v).setVisited(true);
 		
-		if(currentsColor[grafo.getVertice(v).getCor().ordinal()]+1 > maxSequence[grafo.getVertice(v).getCor().ordinal()]){
-			return;
-		}else{
-			if (grafo.getVertice(v).getCor() == Cor.BRANCO){
-				currentsColor[Cor.BRANCO.ordinal()]++;
-				currentsColor[Cor.PRETO.ordinal()] = 0;
-			}else{
-				currentsColor[Cor.PRETO.ordinal()]++;
-				currentsColor[Cor.BRANCO.ordinal()] = 0;
-			}
-		}
-			
+		grafo.getVertice(v).setVisited(true);
+
 		currentTour[level] = grafo.getVertice(v);
+		
+		//Verifica se o custo do atual caminho ultrapassou o melhor existente
+		if (!verifyCurrentCost(level))
+			return;
+		
+		//Verifica a quantidade de vertices pretos e brancos
+		if (!verifyColor(currentTour, level))
+			return;
 		
 		if(level == grafo.getVertices().size()-1){
 			
 			costCurrentTour = calculateCost(currentTour);
+			
+			if(costCurrentTour > result.getMinCostTour())
+				return;
 			
 			if(costCurrentTour < result.getMinCostTour()){
 				result.setMinCostTour(costCurrentTour);
@@ -77,6 +94,16 @@ public class EngineBWTSP {
 			}
 		}
 		
+	}
+
+	private boolean verifyCurrentCost(int level) {
+		int cost = 0;
+		for (int i = 0; i < level; i++){
+			cost += grafo.getCostMatrix(currentTour[i].getId(),(currentTour[(i+1)% currentTour.length].getId()));
+			if(cost > result.getMinCostTour())
+				return false;
+		}
+		return true;
 	}
 
 	private int calculateCost(Vertice[] tour) {
