@@ -24,6 +24,7 @@ public class EngineBWTSP {
 		currentsColor[1] = 0;
 	}
 	
+	
 	public ResultBWTSP calculateBestTour(){
 		long executionTime = System.currentTimeMillis();
 		calculateBestTour(0, 0);

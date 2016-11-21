@@ -12,29 +12,21 @@ public class Main {
 		
 		Grafo grafo = null;
 		if (args.length == 1){
+			//Lêr Grafo do arquivo passado como parametro
 			grafo = readGrafo(args[0]);
 		}else{
 			System.err.println("File not exists or not correct!");
 			System.exit(0);
 		}
 		
-		printIntroInformations(grafo.getVertices().size());
-		
-		grafo.printVerticeColors();
-		System.out.println("-------");
-		grafo.printCostMatrix();
-		
-		grafo.printInfoSizes();
+		grafo.printIntroInformations();
 		
 		EngineBWTSP engineBWTSP= new EngineBWTSP(grafo, grafo.getMaxVerticeWhite(), grafo.getMaxVerticeBlack());
 		
 		ResultBWTSP result = engineBWTSP.calculateBestTour();
 		
-		result.print();
-		
-		result.printTime();
+		printSolution(result);
 	}
-	
 	
 	public static Grafo readGrafo(String path) {
 		
@@ -81,13 +73,10 @@ public class Main {
 		return null;
 	}
 
-	private static void printIntroInformations(int MAX_INSTANCE) {
-		System.out.println("------------------------------------------------------");
-		System.out.println("This is The Black and White Traveling Salesman Problem");
-		System.out.println("------------------------------------------------------");
-		System.out.println("--> N = "+ MAX_INSTANCE);
-		System.out.println("------------------------------------------------------");
-		System.out.println("\nMatrix of edges cost\n");
+	private static void printSolution(ResultBWTSP result) {
+		System.out.println("\n-------------------------solution-----------------------------");
+		result.print();
+		result.printTime();
 	}
 	
 //	private static Grafo generateGrafo() {

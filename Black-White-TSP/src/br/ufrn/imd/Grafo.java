@@ -6,18 +6,21 @@ import java.util.List;
 
 public class Grafo {
 	
-	private String filePath;
-	private List<Vertice> vertices;
-	private int costMatrix[][];
-	private int maxVerticeWhite; 
-	private int maxVerticeBlack;
+	private String filePath;		//Arquivo onde o grafo foi lido
+	private List<Vertice> vertices;	//lista de vertices
+	private int costMatrix[][];		//Matriz de custo das arestas
+	private int maxVerticeWhite; 	//Máximo de vértices brancos
+	private int maxVerticeBlack;	//máximo de vértices pretos
 	
 	public Grafo() {
 		this.vertices = new ArrayList<>();
-		this.setMaxVerticeWhite(1);
+		this.setMaxVerticeWhite(1);			//Se a quantidade máxima não for setada é assumido que as cores alternam
 		this.setMaxVerticeBlack(1);
 	}
 	
+	/**
+	 * Costrói a matriz de custos e as arestas dos vértices
+	 */
 	public void build(){
 		costMatrix = new int [vertices.size()][vertices.size()];
 		for(int i = 0; i < vertices.size(); i++){
@@ -27,6 +30,10 @@ public class Grafo {
 		}
 	}
 	
+	/**
+	 * Imprime a matriz
+	 * @return String correspondente
+	 */
 	public String printCostMatrix(){
 		String out = "";
 		for(int i = 0; i < vertices.size(); i++){
@@ -39,6 +46,10 @@ public class Grafo {
 		return out;
 	}
 	
+	/**
+	 * Imprime as cores dos vértices B = branco, P = preto
+	 * @return
+	 */
 	public String printVerticeColors(){
 		String out = "";
 		for(Vertice v : vertices){
@@ -49,11 +60,21 @@ public class Grafo {
 		return out;
 	}
 	
-	public void printInfoSizes(){
-		System.out.println("---------------------------------------");
-		System.out.println("Quantidade de Arestas: " + Aresta.COUNTS);
-		System.out.println("Quantidade de Vértices: " + Vertice.COUNTS);
-		System.out.println("---------------------------------------");
+	/**
+	 * Imprime informações de criação de objetos
+	 */
+	public void printIntroInformations(){
+		System.out.println("------------------------------------------------------");
+		System.out.println("This is The Black and White Traveling Salesman Problem");
+		System.out.println("------------------------------------------------------");
+		System.out.println("--> V = "+ getVertices().size());
+		System.out.println("--> A = "+ Aresta.COUNTS);
+		System.out.println("--> Branco = "+ getMaxVerticeWhite());
+		System.out.println("--> Preto = "+ getMaxVerticeBlack());
+		System.out.println("\n--> Vertex colors:");
+		printVerticeColors();
+		System.out.println("\n--> Matrix of edges cost:");
+		printCostMatrix();
 	}
 	
 	

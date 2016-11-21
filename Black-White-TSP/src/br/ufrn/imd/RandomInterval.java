@@ -2,6 +2,10 @@ package br.ufrn.imd;
 
 import java.util.Random;
 
+/**
+ * Classe para geração de números aleatórios
+ *
+ */
 public class RandomInterval {
 	private int MIN;
 	private int MAX;
