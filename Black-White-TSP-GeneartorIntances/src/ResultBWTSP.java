@@ -17,7 +17,7 @@ public class ResultBWTSP {
 	 * Imprime a melhor solução
 	 * @return retorna a String correspondente da impressão
 	 */
-	public String print() {
+	public String getPrint() {
 		String out = "";
 		for(int i = 0; i < bestTour.length; i++){
 			out += (bestTour[i].getId()+1 +""+ bestTour[i].getCor().toString().charAt(0));
@@ -25,9 +25,18 @@ public class ResultBWTSP {
 				out+=" ";
 		}
 		out+=(" = "+minCostTour);
-		System.out.println(out);
 		return out;
 	}
+	
+	/**
+	 * Imprime a melhor solução
+	 * @return retorna a String correspondente da impressão
+	 */
+	public void print() {
+		System.out.println(getPrint());
+	}
+	
+	
 	
 	/**
 	 * Imprime o tempo de execução

@@ -27,10 +27,10 @@ public class Main {
 			int n = NO_ARGS_N_INSTANCES;
 			if (args.length == LENGHT_ARGS_N_INSTANCIAS)
 				n = Integer.valueOf(args[0]);
-			RandomInterval rand = new RandomInterval(2, 5);
-			RandomInterval randCostBlack = new RandomInterval(5, 50);
+//			RandomInterval rand = new RandomInterval(2, 5);
+//			RandomInterval randCostBlack = new RandomInterval(5, 50);
 			for(int i = 4; i <= n; i++){
-				generateInstance(i, rand.rand(), randCostBlack.rand(), rand.rand(), 50);
+				generateInstance(i, 2, 50, 15, 80);
 			}
 		}
 		writeFile(PATH_INSTANCE+"names_instances.txt", namesFiles);
@@ -45,7 +45,6 @@ public class Main {
 		RAND_MIN_PESO = Integer.valueOf(rand_min_peso); 
 		RAND_MAX_PESO = Integer.valueOf(rand_max_peso); 
 
-		
 		Grafo grafo = null;
 		ResultBWTSP result = null;
 
@@ -64,21 +63,17 @@ public class Main {
 		}
 		
 		String out = "";
-		out += grafo.printVerticeColors();
-		out += grafo.printCostMatrix();
+		out += grafo.getPrintVerticeColors();
+		out += grafo.getPrintCostMatrix();
 		out += MAX_SEQUENCE_WHITE + " " + MAX_COST_BLACK+"\n";
-		out += result.print();
-		System.out.println(MAX_SEQUENCE_WHITE + " " + MAX_COST_BLACK);
-		System.out.println("---------");
-		
-		System.out.println(tentativas);
-		System.out.println("---------");
+		out += result.getPrint();
 		
 		String nameFile = "intance_"+MAX_INSTANCE+"_"+MAX_SEQUENCE_WHITE+"_"+MAX_COST_BLACK+"_"+RAND_MIN_PESO+"_"+RAND_MAX_PESO+".txt";
 		
 		writeFile(PATH_INSTANCE+nameFile, out);
 		namesFiles += nameFile + "\n";
-		result.printTime();
+		double x = result.getExecutionTime()/1000.0;
+		System.out.println(grafo.getVertices().size()+" "+x+" "+MAX_SEQUENCE_WHITE+" "+MAX_COST_BLACK);
 	}
 	
 	

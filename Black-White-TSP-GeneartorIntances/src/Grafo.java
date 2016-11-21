@@ -34,7 +34,7 @@ public class Grafo {
 	 * Imprime a matriz
 	 * @return String correspondente
 	 */
-	public String printCostMatrix(){
+	public String getPrintCostMatrix(){
 		String out = "";
 		for(int i = 0; i < vertices.size(); i++){
 			for(int j = 0; j < vertices.size(); j++){
@@ -42,21 +42,32 @@ public class Grafo {
 			}
 			out += "\n";
 		}
-		System.out.print(out);
+		
 		return out;
+	}
+	
+	/**
+	 * Imprime a matriz
+	 * @return String correspondente
+	 */
+	public void printCostMatrix(){
+		System.out.print(getPrintCostMatrix());
 	}
 	
 	/**
 	 * Imprime as cores dos vértices B = branco, P = preto
 	 * @return
 	 */
-	public String printVerticeColors(){
+	public void printVerticeColors(){
+		System.out.print(getPrintVerticeColors());
+	}
+	
+	public String getPrintVerticeColors() {
 		String out = "";
 		for(Vertice v : vertices){
 			out += (v.getCor().ordinal()+" ");
 		}
 		out += "\n";
-		System.out.print(out);
 		return out;
 	}
 	
