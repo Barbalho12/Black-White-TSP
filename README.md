@@ -1,21 +1,27 @@
 # Black-White-TSP
 This is The Black and White Traveling Salesman Problem
 
+## Orientação
+Os programas para execução estão no diretório 'dist', além deles também há uma pasta com um conjunto de arquivos contendo as instâncias. O código fonte desses programas estão nos diretórios raiz do projeto.
+
+* Black-White-TSP: Executa uma instancia passada como parâmetro (descrito a seguir);
+* Black-White-TSP-GeneartorIntances: Cria instancias (descrito a seguir);
 
 ## Execução
-Executando Instancia salva no diretório 'instancia' no arquivo 'intance_5_3_4_3_40.txt'
+Executando Instância salva no diretório 'instances' no arquivo 'intance_5_3_4_3_40.txt'
 
 ```sh
-java -jar Black-White-TSP.jar instancia/intance_5_3_4_3_40.txt
+java -jar Black-White-TSP.jar instances/intance_5_3_4_3_40.txt
 ```
 
-## Gerando instancias
-Para gerar instancias basta passar, como parâmetro, o tamanho máximo da instâncias, dessa forma o programa irá gerar instancias apartir de uma de tamanho 4, aumentando iterativamente até o numero estabelecido, as demais variaveis são aleatórias (com excessão de RAND_MAX_PESO):
+## Gerando instâncias
+Para gerar instâncias, basta passar como parâmetro, o tamanho máximo das instâncias, dessa forma o programa irá gerar instâncias a partir de uma de tamanho 4, aumentando iterativamente até o numero estabelecido. As demais variáveis são aleatórias (com exceção de RAND_MAX_PESO):
 
-* Numero maximo de vertices branco em sequencia: MAX_SEQUENCE_WHITE:  2~5;
-* Numero maximo de vertices preto em sequencia: MAX_SEQUENCE_BLACK:  2~5;
-* Peso minimo de aresta: RAND_MIN_PESO:  2~5;
-* peso maximo de aresta: RAND_MAX_PESO = 40;
+* Numero máximo de vértices branco em sequencia: MAX_SEQUENCE_WHITE: 2~5;
+* Numero máximo de vértices preto em sequencia: MAX_SEQUENCE_BLACK: 2~5;
+* Peso mínimo de aresta: RAND_MIN_PESO: 2~5;
+* peso máximo de aresta: RAND_MAX_PESO = 40;
+
 
 Gerando 10 Instâncias de tamanhos i (4 <= i <= 14):
 	
@@ -23,7 +29,7 @@ Gerando 10 Instâncias de tamanhos i (4 <= i <= 14):
 java -jar Black-White-TSP-gen.jar 14
 ```
 
-Também é possivel criar uma única instancia definindo todos os cinco atributos na devida ordem como parametro:
+Também é possível criar uma única instância definindo todos os cinco atributos na devida ordem como parâmetro:
 	
 ```sh
 java -jar Black-White-TSP-gen.jar a b c d e
@@ -35,7 +41,7 @@ java -jar Black-White-TSP-gen.jar a b c d e
 * d = RAND_MIN_PESO
 * e = RAND_MAX_PESO
 
-Gerando 1 Instância de tamanhos 10, com 3 no máximo 3 vértices brancos e 2 pretos em sequência, e custo das arestas variando entre 5 e 50:
+Gerando uma Instância de tamanhos 10, com 3 no máximo 3 vértices brancos e 2 pretos em sequência, e custo das arestas variando entre 5 e 50:
  
 ```sh
 java -jar Black-White-TSP-gen.jar 10 3 2 5 50
