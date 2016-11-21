@@ -1,8 +1,0 @@
-intance_4_3_3_3_40.txt
-intance_5_2_2_4_40.txt
-intance_6_2_3_2_40.txt
-intance_7_5_4_4_40.txt
-intance_8_5_5_4_40.txt
-intance_9_5_2_4_40.txt
-intance_10_2_3_5_40.txt
-intance_11_5_4_4_40.txt
