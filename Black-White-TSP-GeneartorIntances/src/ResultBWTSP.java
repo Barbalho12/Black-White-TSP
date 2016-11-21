@@ -1,10 +1,11 @@
 
 
+
 public class ResultBWTSP {
 	
-	private Vertice bestTour[];
-	private int minCostTour;
-	private long executionTime;
+	private Vertice bestTour[];		//Melhor tour
+	private int minCostTour;		//custo do tour
+	private long executionTime;		//Tempo de execução
 	
 	public ResultBWTSP(int instance_lenght){
 		this.minCostTour = Integer.MAX_VALUE;
@@ -12,6 +13,10 @@ public class ResultBWTSP {
 		this.executionTime = 0;
 	}
 	
+	/**
+	 * Imprime a melhor solução
+	 * @return retorna a String correspondente da impressão
+	 */
 	public String print() {
 		String out = "";
 		for(int i = 0; i < bestTour.length; i++){
@@ -24,6 +29,9 @@ public class ResultBWTSP {
 		return out;
 	}
 	
+	/**
+	 * Imprime o tempo de execução
+	 */
 	public void printTime(){
 		System.out.println("Execution Time: "+(executionTime/1000.0)+" seconds");
 	}
@@ -32,12 +40,12 @@ public class ResultBWTSP {
 		return bestTour;
 	}
 
-	public void setBestTour(int i, Vertice bestTourVertice) {
-		this.bestTour[i] = bestTourVertice;
+	public void setBestTour(Vertice bestTourVertice[]) {
+		this.bestTour = bestTourVertice.clone();
 	}
 	
-	public void setBestTour(Vertice[] bestTour) {
-		this.bestTour = bestTour;
+	public void setBestTour(int i, Vertice bestTourVertice) {
+		this.bestTour[i] = bestTourVertice;
 	}
 
 	public int getMinCostTour() {

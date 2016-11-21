@@ -2,6 +2,10 @@
 
 import java.util.Random;
 
+/**
+ * Classe para geração de números aleatórios
+ *
+ */
 public class RandomInterval {
 	private int MIN;
 	private int MAX;
@@ -20,7 +24,7 @@ public class RandomInterval {
 	}
 	
 	public int rand(){
-		int n = RAND.nextInt(MAX-MIN+1) + MIN;
+		int n = RAND.nextInt(MAX+MIN+1) + MIN;
 		return n;
 	}
 	
