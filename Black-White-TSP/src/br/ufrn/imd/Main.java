@@ -10,13 +10,14 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-//		int RAND_MIN_PESO = 2; 
-//		int RAND_MAX_PESO = 10; 
-//		int MAX_INSTANCE = 4;
-//		Grafo grafo = generateGrafo(MAX_INSTANCE, RAND_MIN_PESO, RAND_MAX_PESO);
+		Grafo grafo = null;
+		if (args.length == 1){
+			grafo = readGrafo(args[0]);
+		}else{
+			System.err.println("File not exists or not correct!");
+			System.exit(0);
+		}
 		
-		Grafo grafo = readGrafo("data/intance_13_3_4_5_40.txt");
-
 		printIntroInformations(grafo.getVertices().size());
 		
 		grafo.printVerticeColors();
@@ -30,29 +31,11 @@ public class Main {
 		ResultBWTSP result = engineBWTSP.calculateBestTour();
 		
 		result.print();
-		result.printTime();
 		
+		result.printTime();
 	}
 	
-//	private static Grafo generateGrafo(int MAX_INSTANCE, int RAND_MIN_PESO, int RAND_MAX_PESO) {
-//		RandomInterval randCor = new RandomInterval(Cor.BRANCO, Cor.PRETO);
-//		RandomInterval randCost = new RandomInterval(RAND_MIN_PESO, RAND_MAX_PESO);
-//		Grafo grafo = new Grafo();
-//		for(int i = 0; i < MAX_INSTANCE; i++){
-//			
-//			Vertice newVertice = new Vertice( randCor.randCor(), i);
-//			grafo.addVertice(newVertice);
-//			
-//			for(Vertice v : grafo.getVertices()){
-//				if(!v.equals(newVertice)){
-//					newVertice.addAresta(new Aresta(randCost.rand(), v, newVertice));
-//				}
-//			}
-//		}
-//		grafo.build(); 
-//		return grafo;
-//	}
-
+	
 	public static Grafo readGrafo(String path) {
 		
 		try {
@@ -106,5 +89,27 @@ public class Main {
 		System.out.println("------------------------------------------------------");
 		System.out.println("\nMatrix of edges cost\n");
 	}
+	
+//	private static Grafo generateGrafo() {
+//		int RAND_MIN_PESO = 2; 
+//		int RAND_MAX_PESO = 10; 
+//		int MAX_INSTANCE = 4;
+//		RandomInterval randCor = new RandomInterval(Cor.BRANCO, Cor.PRETO);
+//		RandomInterval randCost = new RandomInterval(RAND_MIN_PESO, RAND_MAX_PESO);
+//		Grafo grafo = new Grafo();
+//		for(int i = 0; i < MAX_INSTANCE; i++){
+//			
+//			Vertice newVertice = new Vertice( randCor.randCor(), i);
+//			grafo.addVertice(newVertice);
+//			
+//			for(Vertice v : grafo.getVertices()){
+//				if(!v.equals(newVertice)){
+//					newVertice.addAresta(new Aresta(randCost.rand(), v, newVertice));
+//				}
+//			}
+//		}
+//		grafo.build(); 
+//		return grafo;
+//	}
 
 }
