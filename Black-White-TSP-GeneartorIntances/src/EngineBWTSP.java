@@ -15,14 +15,14 @@ public class EngineBWTSP {
 	 * @param MAX_SEQUENCE_WHITE Máximo  de vértices Brancos em sequência
 	 * @param MAX_SEQUENCE_BLACK Máximo  de vértices Pretos em sequência
 	 */
-	public EngineBWTSP(Grafo grafo, int MAX_SEQUENCE_WHITE, int MAX_SEQUENCE_BLACK){
+	public EngineBWTSP(Grafo grafo, int MAX_SEQUENCE_WHITE, int MAX_COST_BLACK){
 		this.grafo = grafo;
 		this.result = new ResultBWTSP(this.grafo.getVertices().size());
 		this.currentTour = new Vertice[this.grafo.getVertices().size()];
 		this.costCurrentTour = 0;
 		maxSequence = new int [2];
 		maxSequence[0] = MAX_SEQUENCE_WHITE;
-		maxSequence[1] = MAX_SEQUENCE_BLACK;
+		maxSequence[1] = MAX_COST_BLACK;
 	}
 	
 	/**
@@ -67,8 +67,12 @@ public class EngineBWTSP {
 				p++;
 				b=0;
 			}
-			if(p > maxSequence[1] || b > maxSequence[0])
-				return false;
+			
+			if (p > 1 && grafo.getCostMatrix(currentTour[i-1].getId(), currentTour[i].getId()) > maxSequence[1]) return false;
+			if(b > maxSequence[0]) return false;
+			
+//			if(p > maxSequence[1] || b > maxSequence[0])
+//				return false;
 		}
 		return true;
 	}

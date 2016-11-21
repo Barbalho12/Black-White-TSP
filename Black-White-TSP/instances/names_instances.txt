@@ -1,0 +1,9 @@
+intance_4_3_14_9_40.txt
+intance_5_4_32_7_40.txt
+intance_6_8_28_3_40.txt
+intance_7_8_23_4_40.txt
+intance_8_4_31_6_40.txt
+intance_9_3_20_6_40.txt
+intance_10_9_29_2_40.txt
+intance_11_9_31_8_40.txt
+intance_12_2_21_6_40.txt
