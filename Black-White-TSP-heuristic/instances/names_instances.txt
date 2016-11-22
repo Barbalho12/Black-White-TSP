@@ -1,0 +1,12 @@
+intance_4_2_50_15_80.txt
+intance_5_2_50_15_80.txt
+intance_6_2_50_15_80.txt
+intance_7_2_50_15_80.txt
+intance_8_2_50_15_80.txt
+intance_9_2_50_15_80.txt
+intance_10_2_50_15_80.txt
+intance_11_2_50_15_80.txt
+intance_12_2_50_15_80.txt
+intance_13_2_50_15_80.txt
+intance_14_2_50_15_80.txt
+intance_15_2_50_15_80.txt
