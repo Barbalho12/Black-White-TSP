@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufrn.imd.model.Aresta;
+import br.ufrn.imd.model.Cor;
+import br.ufrn.imd.model.Grafo;
+import br.ufrn.imd.model.Vertice;
+
 public class Main {
 	
 	public static void main(String[] args) {

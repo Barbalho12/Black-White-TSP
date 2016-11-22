@@ -28,8 +28,9 @@ public class Main {
 	 * metaheuristica simulated Annealing
 	 * @param S0 Solução inicial
 	 * @param tempInit Temperatura inicial
-	 * @param maxIteration
-	 * @param maxPertub
+	 * @param maxIteration máximo de iteração no loop em quanto a temperatura é diferente de zero
+	 * @param maxPertub máximo de pertubações aplicada em uma iteração
+	 * @param goodSuccess quantidade de sucessos desejados
 	 * @param maxSuccessByIt
 	 * @param coeficienteTemperatura
 	 */
@@ -101,10 +102,34 @@ public class Main {
 	}
 	
 	public static void main(String[] args){
-		
-		/*Ler o grafo*/
-		grafo = readGrafo("instances/intance_19_4_33_3_50.txt");
 
+		int TEMP_INIT = 1000;
+		int MAX_ITERATION = 10000;
+		int MAX_PERTUB = 10;
+		int GOOD_SUCCESS  = 1000;
+		int MAX_SUCCESS_BY_IT = 1000;
+		int COEFICIENTE_TEMPERATURA = 1;
+
+		if(args.length >= 1){
+			/*Ler o grafo*/
+			grafo = readGrafo(args[0]);
+			
+		}else if(args.length == 7){
+			grafo = readGrafo(args[0]);
+			TEMP_INIT = Integer.valueOf(args[1]);
+			MAX_ITERATION = Integer.valueOf(args[2]);
+			MAX_PERTUB  = Integer.valueOf(args[3]);
+			GOOD_SUCCESS  = Integer.valueOf(args[4]);
+			MAX_SUCCESS_BY_IT = Integer.valueOf(args[5]);
+			COEFICIENTE_TEMPERATURA = Integer.valueOf(args[6]);
+
+		}else{
+			
+			/*Ler o grafo*/
+			grafo = readGrafo("instances/intance_19_4_33_3_50.txt");
+			MAX_PERTUB  = (int) Math.pow(grafo.getVertices().size(), 2);
+
+		}
 		/*variável para Solução inicial*/
 		S0 = new Vertice[grafo.getVertices().size()];
 		
@@ -118,14 +143,15 @@ public class Main {
 		long executionTimeSI = System.currentTimeMillis();
 		solucaoInit(0, 0);
 		executionTimeSI = System.currentTimeMillis() - executionTimeSI;
-		
+
 		/*Calculo da meta-heuristica*/
 		long executionTimeSA = System.currentTimeMillis();
-		simulatedAnnealing(S0, 1000, 10000, (int) Math.pow(grafo.getVertices().size(), 2), 1000, 1000, 1);
+		simulatedAnnealing(S0, TEMP_INIT, MAX_ITERATION, MAX_PERTUB, GOOD_SUCCESS, MAX_SUCCESS_BY_IT, COEFICIENTE_TEMPERATURA);
 		executionTimeSA = System.currentTimeMillis() - executionTimeSA;
 
 		/*Exibe os resultados*/
 		showResults(executionTimeSI, executionTimeSA);
+		
 	}
 
 	

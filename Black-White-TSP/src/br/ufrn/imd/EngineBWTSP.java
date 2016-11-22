@@ -1,5 +1,8 @@
 package br.ufrn.imd;
 
+import br.ufrn.imd.model.Cor;
+import br.ufrn.imd.model.Grafo;
+import br.ufrn.imd.model.Vertice;
 
 public class EngineBWTSP {
 

@@ -1,6 +1,6 @@
 package br.ufrn.imd;
 
-
+import br.ufrn.imd.model.Vertice;
 
 public class ResultBWTSP {
 	

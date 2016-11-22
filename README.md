@@ -6,12 +6,21 @@ Os programas para execução estão no diretório 'dist', além deles também h�
 
 * Black-White-TSP: Executa uma instancia passada como parâmetro (descrito a seguir);
 * Black-White-TSP-GeneartorIntances: Cria instancias (descrito a seguir);
+* Black-White-TSP-heuristic: Executa uma instancia passada como parâmetro (descrito a seguir);
 
 ## Execução
 Executando Instância salva no diretório 'instances' no arquivo 'intance_5_3_4_3_40.txt'
 
+### Algoritmo Exato
+
 ```sh
 java -jar Black-White-TSP.jar instances/intance_5_3_4_3_40.txt
+```
+
+### Algoritmo Heurístico
+
+```sh
+java -jar Black-White-TSP-heuristic.jar instances/intance_5_3_4_3_40.txt
 ```
 
 ## Gerando instâncias

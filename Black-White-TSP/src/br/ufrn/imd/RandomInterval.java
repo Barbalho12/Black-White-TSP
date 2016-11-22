@@ -2,6 +2,8 @@ package br.ufrn.imd;
 
 import java.util.Random;
 
+import br.ufrn.imd.model.Cor;
+
 /**
  * Classe para geração de números aleatórios
  *
