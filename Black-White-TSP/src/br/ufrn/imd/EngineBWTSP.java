@@ -113,6 +113,7 @@ public class EngineBWTSP {
 				//O melhor resultado é adicionado ao resultado
 				result.setMinCostTour(costCurrentTour);
 				result.setBestTour(currentTour);
+				return;
 			}
 		}
 		

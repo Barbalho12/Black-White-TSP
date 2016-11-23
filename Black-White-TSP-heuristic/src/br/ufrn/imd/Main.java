@@ -83,7 +83,7 @@ public class Main {
 
 		while(true){
 			a = rand.nextInt(s.length-1)+1;
-			b = rand.nextInt(s.length);
+			b = rand.nextInt(s.length-1)+1;
 			
 			if(a!=b){
 				temp = s[a];
@@ -151,6 +151,8 @@ public class Main {
 
 		/*Exibe os resultados*/
 		showResults(executionTimeSI, executionTimeSA);
+		
+		showResultsSimple(executionTimeSI, executionTimeSA);
 		
 	}
 
@@ -255,6 +257,23 @@ public class Main {
 		System.out.println(" : "+executionTimeSA/1000.0);
 		long totaltime = executionTimeSI+executionTimeSA;
 		System.out.println("\n"+grafo.getVertices().size()+" "+totaltime/1000.0+" "+grafo.getMaxVerticeWhite()+" "+grafo.getMaxVerticeBlack());
+	}
+	
+	/**
+	 * Exibe os resultados
+	 * @param executionTimeSI Tempo de execução da solução inicial
+	 * @param executionTimeSA Tempo de execução do simulatedAnnealing
+	 */
+	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
+		
+		long totaltime = executionTimeSI+executionTimeSA;
+		
+		System.out.println(grafo.getVertices().size()+"\t"+
+						   calculateCost(S0)+"\t"+
+						   calculateCost(soulucao)+"\t"+
+						   executionTimeSI+"\t"+
+						   executionTimeSA+"\t"+
+						   totaltime);
 	}
 	
 	/**
