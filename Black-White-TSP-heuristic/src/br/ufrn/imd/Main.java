@@ -152,7 +152,7 @@ public class Main {
 		/*Exibe os resultados*/
 		showResults(executionTimeSI, executionTimeSA);
 		
-		showResultsSimple(executionTimeSI, executionTimeSA);
+//		showResultsSimple(executionTimeSI, executionTimeSA);
 		
 	}
 
@@ -243,38 +243,40 @@ public class Main {
 	private static void showResults(long executionTimeSI, long executionTimeSA) {
 		System.out.println("---------------------------");
 		
+		System.out.println("Initial Solution: ");
 		for (int i = 0; i < S0.length; i++) {
 			System.out.print(S0[i].getId()+1+""+S0[i].getCor().name().charAt(0)+" ");
 		}
 		System.out.print("= "+calculateCost(S0));
-		System.out.println(" : "+executionTimeSI/1000.0);
+		System.out.println(" : "+executionTimeSI/1000.0+"s");
 		
 
+		System.out.println("Solution: ");
 		for (int i = 0; i < soulucao.length; i++) {
 			System.out.print(soulucao[i].getId()+1+""+soulucao[i].getCor().name().charAt(0)+" ");
 		}
 		System.out.print("= "+calculateCost(soulucao));
-		System.out.println(" : "+executionTimeSA/1000.0);
+		System.out.println(" : "+executionTimeSA/1000.0+"s");
 		long totaltime = executionTimeSI+executionTimeSA;
-		System.out.println("\n"+grafo.getVertices().size()+" "+totaltime/1000.0+" "+grafo.getMaxVerticeWhite()+" "+grafo.getMaxVerticeBlack());
+		System.out.println("\nN: "+grafo.getVertices().size()+" Time: "+totaltime/1000.0+" Branco: "+grafo.getMaxVerticeWhite()+" Preto: "+grafo.getMaxVerticeBlack());
 	}
 	
-	/**
-	 * Exibe os resultados
-	 * @param executionTimeSI Tempo de execução da solução inicial
-	 * @param executionTimeSA Tempo de execução do simulatedAnnealing
-	 */
-	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
-		
-		long totaltime = executionTimeSI+executionTimeSA;
-		
-		System.out.println(grafo.getVertices().size()+"\t"+
-						   calculateCost(S0)+"\t"+
-						   calculateCost(soulucao)+"\t"+
-						   executionTimeSI+"\t"+
-						   executionTimeSA+"\t"+
-						   totaltime);
-	}
+//	/**
+//	 * Exibe os resultados
+//	 * @param executionTimeSI Tempo de execução da solução inicial
+//	 * @param executionTimeSA Tempo de execução do simulatedAnnealing
+//	 */
+//	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
+//		
+//		long totaltime = executionTimeSI+executionTimeSA;
+//		
+//		System.out.println(grafo.getVertices().size()+"\t"+
+//						   calculateCost(S0)+"\t"+
+//						   calculateCost(soulucao)+"\t"+
+//						   executionTimeSI+"\t"+
+//						   executionTimeSA+"\t"+
+//						   totaltime);
+//	}
 	
 	/**
 	 * Ler as informações do grafo de um arquivo
