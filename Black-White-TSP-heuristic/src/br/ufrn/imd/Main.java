@@ -15,59 +15,54 @@ import br.ufrn.imd.model.Vertice;
 public class Main {
 	static Random rand = new Random();
 	
-	static Vertice[] soulucao;
-	static Grafo grafo;
-	static Vertice[] S0;
+	static Vertice[] soulucao; 	//Solução final
+	static Grafo grafo;			//Grafo analisado
+	static Vertice[] S0; 		//Solução inicial
 	
 	static int sizeBS = 0;
 	static Vertice[] bestVS;
 	static int min_cost_bestVS = Integer.MAX_VALUE;
 	private static int BEST_SOLUCOES_INICIAIS_TEST = 1;
-	
+		
 	/**
-	 * metaheuristica simulated Annealing
+	 * Metaheuristica simulated Annealing
 	 * @param S0 Solução inicial
-	 * @param tempInit Temperatura inicial
-	 * @param maxIteration máximo de iteração no loop em quanto a temperatura é diferente de zero
-	 * @param maxPertub máximo de pertubações aplicada em uma iteração
-	 * @param goodSuccess quantidade de sucessos desejados
-	 * @param maxSuccessByIt
-	 * @param coeficienteTemperatura
+	 * @param T Temperatura inicial
+	 * @param maxPetb máximo de pertubações aplicada em uma iteração
+	 * @param maxSucsIt quantidade de sucessos desejados por iteração
+	 * @param coefTemp coeficiente de diminuição de temperatura
 	 */
-	static void simulatedAnnealing(Vertice[] S0, int tempInit, int maxIteration, int maxPertub, int goodSuccess, int maxSuccessByIt, int coeficienteTemperatura){
+	static void simulatedAnnealing(int T, int maxPetb, int maxSucsIt, int coefTemp){
 		
 		soulucao = S0.clone();
-		int T = tempInit;
-		int j = 1;
-		int nSucesso;
+		int nSucesso = 0;
 		
-		/*Executa em quanto não tiver sucessos ou o numeros maximo de iterações não for atingido*/
-		do{
+		/*Enquanto Temperatura maior que 0*/
+		while(T > 0){
+			
 			int i = 1;
 			nSucesso = 0;
 			
-			/*perturbação em uma iteração*/
-			do{
+			/*Enquanto máximo de sucesso ou máximo de pertubação por iteração*/
+			while((nSucesso < maxSucsIt) && (i < maxPetb)){
 				
-				/*Pertuba a solução*/
+				/*Pertuba a solução corrente*/
 				Vertice[] Si = perturbation(soulucao);
 				
 				/*Diferença da solução pertubada com a solução corrente*/
 				int Fi = calculateCost(Si) - calculateCost(soulucao); 
 	
-				if ((Fi <= 0) || (((-Fi)/T) > rand.nextDouble())){ /*Verifica se melhorou ou dependendo da temperatura, aceita-se uma piora*/
+				/*Verifica se melhorou ou dependendo da temperatura, aceita-se uma piora*/
+				if ((Fi <= 0) || (((-Fi)/T) > rand.nextDouble())){ 
 					soulucao = Si;
 					nSucesso++;
 				}
-				i++;
 				
-			}while(!((nSucesso >= maxSuccessByIt) || (i > maxPertub)));
+				i++;
+			}
 			
-			T-=coeficienteTemperatura; /*Diminuição da temperatura*/
-
-			j++; /*contador iterações*/
-			
-		}while(((nSucesso < goodSuccess) || (j > maxIteration)) && T>0);
+			T -= coefTemp; /*Diminuição da temperatura*/
+		}
 	}
 
 
@@ -77,36 +72,43 @@ public class Main {
 	 * @return outro vetor com o resultado da pertubação
 	 */
 	private static Vertice[] perturbation(Vertice[] s2) {
+		
 		Vertice[] s = s2.clone();
+		
 		int a, b;
-		Vertice temp;
 
 		while(true){
+			
+			/*Escolhe dois índices do caminho aleatoriamente*/
 			a = rand.nextInt(s.length-1)+1;
 			b = rand.nextInt(s.length-1)+1;
 			
+			/*Se forem difentes*/
 			if(a!=b){
-				temp = s[a];
-				s[a] = s[b];
-				s[b] = temp;
 				
+				/*Troca os vértices de índice a e b*/
+				swap(s, a, b);
+				
+				/*Retorna se a restrição de cor for válida*/
 				if (verifyColor(s, s.length-1)){
 					return s;
-				}else{
-					continue;
 				}
-			}else{
-				continue;
 			}
+			/*Se as condições não forem válidas, continua*/
 		}
+	}
+
+
+	private static void swap(Vertice[] s, int chosen, int i) {
+		Vertice temp = s[chosen];
+		s[chosen] = s[i];
+		s[i] = temp;
 	}
 	
 	public static void main(String[] args){
 
 		int TEMP_INIT = 1000;
-		int MAX_ITERATION = 10000;
 		int MAX_PERTUB = 10;
-		int GOOD_SUCCESS  = 1000;
 		int MAX_SUCCESS_BY_IT = 1000;
 		int COEFICIENTE_TEMPERATURA = 1;
 
@@ -114,17 +116,13 @@ public class Main {
 			/*Ler o grafo*/
 			grafo = readGrafo(args[0]);
 			
-		}else if(args.length == 7){
+		}else if(args.length == 5){
 			grafo = readGrafo(args[0]);
 			TEMP_INIT = Integer.valueOf(args[1]);
-			MAX_ITERATION = Integer.valueOf(args[2]);
 			MAX_PERTUB  = Integer.valueOf(args[3]);
-			GOOD_SUCCESS  = Integer.valueOf(args[4]);
 			MAX_SUCCESS_BY_IT = Integer.valueOf(args[5]);
 			COEFICIENTE_TEMPERATURA = Integer.valueOf(args[6]);
-
 		}else{
-			
 			/*Ler o grafo*/
 			grafo = readGrafo("instances/intance_19_4_33_3_50.txt");
 			MAX_PERTUB  = (int) Math.pow(grafo.getVertices().size(), 2);
@@ -146,7 +144,7 @@ public class Main {
 
 		/*Calculo da meta-heuristica*/
 		long executionTimeSA = System.currentTimeMillis();
-		simulatedAnnealing(S0, TEMP_INIT, MAX_ITERATION, MAX_PERTUB, GOOD_SUCCESS, MAX_SUCCESS_BY_IT, COEFICIENTE_TEMPERATURA);
+		simulatedAnnealing(TEMP_INIT, MAX_PERTUB, MAX_SUCCESS_BY_IT, COEFICIENTE_TEMPERATURA);
 		executionTimeSA = System.currentTimeMillis() - executionTimeSA;
 
 		/*Exibe os resultados*/
@@ -165,9 +163,11 @@ public class Main {
 	 */
 	private static boolean solucaoInit(int v, int level){
 		
-		grafo.getVertice(v).setVisited(true); //Marca o vertice como visitado
+		 //Marca o vertice como visitado
+		grafo.getVertice(v).setVisited(true);
 		
-		S0[level] = grafo.getVertice(v); //Adiciona o vertice no tour
+		//Adiciona o vertice no tour
+		S0[level] = grafo.getVertice(v); 
 		
 		//Verifica a quantidade de vertices pretos e brancos
 		if (!verifyColor(S0, level))
@@ -261,22 +261,23 @@ public class Main {
 		System.out.println("\nN: "+grafo.getVertices().size()+" Time: "+totaltime/1000.0+" Branco: "+grafo.getMaxVerticeWhite()+" Preto: "+grafo.getMaxVerticeBlack());
 	}
 	
-//	/**
-//	 * Exibe os resultados
-//	 * @param executionTimeSI Tempo de execução da solução inicial
-//	 * @param executionTimeSA Tempo de execução do simulatedAnnealing
-//	 */
-//	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
-//		
-//		long totaltime = executionTimeSI+executionTimeSA;
-//		
-//		System.out.println(grafo.getVertices().size()+"\t"+
-//						   calculateCost(S0)+"\t"+
-//						   calculateCost(soulucao)+"\t"+
-//						   executionTimeSI+"\t"+
-//						   executionTimeSA+"\t"+
-//						   totaltime);
-//	}
+	/**
+	 * Exibe os resultados
+	 * @param executionTimeSI Tempo de execução da solução inicial
+	 * @param executionTimeSA Tempo de execução do simulatedAnnealing
+	 */
+	@SuppressWarnings("unused")
+	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
+		
+		long totaltime = executionTimeSI+executionTimeSA;
+		
+		System.out.println(grafo.getVertices().size()+"\t"+
+						   calculateCost(S0)+"\t"+
+						   calculateCost(soulucao)+"\t"+
+						   executionTimeSI+"\t"+
+						   executionTimeSA+"\t"+
+						   totaltime);
+	}
 	
 	/**
 	 * Ler as informações do grafo de um arquivo
