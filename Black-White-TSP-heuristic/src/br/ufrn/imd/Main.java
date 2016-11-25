@@ -15,7 +15,7 @@ import br.ufrn.imd.model.Vertice;
 public class Main {
 	static Random rand = new Random();
 	
-	static Vertice[] soulucao; 	//Solução final
+	static Vertice[] bestGlobal; 	//Solução final
 	static Grafo grafo;			//Grafo analisado
 	static Vertice[] S0; 		//Solução inicial
 	
@@ -32,36 +32,39 @@ public class Main {
 	 * @param maxSucsIt quantidade de sucessos desejados por iteração
 	 * @param coefTemp coeficiente de diminuição de temperatura
 	 */
-	static void simulatedAnnealing(int T, int maxPetb, int maxSucsIt, int coefTemp){
+	static void simulatedAnnealing(int T, int maxPetb, int coefTemp){
 		
-		soulucao = S0.clone();
-		int nSucesso = 0;
+		Vertice[] sCurrent = S0.clone();
+		int tInit = T;
 		
+		bestGlobal = S0.clone();
+		int costBestGlobal = calcCost(S0);
+		int calcSCurrent =  calcCost(S0);
 		/*Enquanto Temperatura maior que 0*/
-		while(T > 0){
-			
-			int i = 1;
-			nSucesso = 0;
-			
+		for( ; T > 0; T -= coefTemp){
+
 			/*Enquanto máximo de sucesso ou máximo de pertubação por iteração*/
-			while((nSucesso < maxSucsIt) && (i < maxPetb)){
+			for(int i = 0; i < maxPetb; i++){
 				
 				/*Pertuba a solução corrente*/
-				Vertice[] Si = perturbation(soulucao);
+				Vertice[] Si = perturbation(sCurrent, T/tInit*(1.0));
 				
 				/*Diferença da solução pertubada com a solução corrente*/
-				int Fi = calculateCost(Si) - calculateCost(soulucao); 
-	
-				/*Verifica se melhorou ou dependendo da temperatura, aceita-se uma piora*/
-				if ((Fi <= 0) || (((-Fi)/T) > rand.nextDouble())){ 
-					soulucao = Si;
-					nSucesso++;
-				}
+				int calcSI = calcCost(Si);
+				int Fi = calcSI - calcSCurrent; 
 				
-				i++;
+				double x = (((calcCost(sCurrent)*0.001)/Fi) * T/tInit); 
+				
+				/*Verifica se melhorou ou dependendo da temperatura, aceita-se uma piora*/
+				if ((Fi != 0) && ((Fi < 0) || (x > rand.nextDouble()))){ 
+					sCurrent = Si;
+					calcSCurrent = calcSI;
+					if(calcSI < costBestGlobal){
+						costBestGlobal = calcSI;
+						bestGlobal = Si.clone();
+					}
+				}
 			}
-			
-			T -= coefTemp; /*Diminuição da temperatura*/
 		}
 	}
 
@@ -71,7 +74,7 @@ public class Main {
 	 * @param s2 solução corrente
 	 * @return outro vetor com o resultado da pertubação
 	 */
-	private static Vertice[] perturbation(Vertice[] s2) {
+	private static Vertice[] perturbation(Vertice[] s2, double shaking) {
 		
 		Vertice[] s = s2.clone();
 		
@@ -97,6 +100,63 @@ public class Main {
 			/*Se as condições não forem válidas, continua*/
 		}
 	}
+	
+	/**
+	 * Pertuba uma solução corrente
+	 * @param s2 solução corrente
+	 * @return outro vetor com o resultado da pertubação
+	 */
+	private static Vertice[] perturbation2(Vertice[] s2, double shaking) {
+		
+		Vertice[] s = s2.clone();
+		
+		
+		
+		int n = s.length;
+		
+		int range = (int) (shaking*(s.length)+1);
+
+		int a, b;
+		
+		while(true){
+			
+			/*Escolhe dois índices do caminho aleatoriamente dentro do range*/
+			a = rand(1,n);
+			b = randInRange(n, range, a);
+			
+			/*Se forem difentes*/
+			if(a!=b){
+				
+				/*Troca os vértices de índice a e b*/
+				swap(s, a, b);
+				
+				/*Retorna se a restrição de cor for válida*/
+				if (verifyColor(s, s.length-1)){
+					return s;
+				}
+			}
+			/*Se as condições não forem válidas, continua*/
+		}
+	}
+
+
+	private static int randInRange(int n, int range, int a) {
+		int x = a-range;
+		int y = a+range;
+		if (x<=1){
+			x = 1;
+		}
+		if (y>n){
+			y = n;
+		}
+		return rand(x,y);
+	}
+
+
+	private static int rand(int min, int max) {
+	    return rand.nextInt((max - min)) + min;
+	}
+	
 
 
 	private static void swap(Vertice[] s, int chosen, int i) {
@@ -108,8 +168,7 @@ public class Main {
 	public static void main(String[] args){
 
 		int TEMP_INIT = 1000;
-		int MAX_PERTUB = 10;
-		int MAX_SUCCESS_BY_IT = 1000;
+		int MAX_PERTUB = 100;
 		int COEFICIENTE_TEMPERATURA = 1;
 
 		if(args.length >= 1){
@@ -119,9 +178,8 @@ public class Main {
 		}else if(args.length == 5){
 			grafo = readGrafo(args[0]);
 			TEMP_INIT = Integer.valueOf(args[1]);
-			MAX_PERTUB  = Integer.valueOf(args[3]);
-			MAX_SUCCESS_BY_IT = Integer.valueOf(args[5]);
-			COEFICIENTE_TEMPERATURA = Integer.valueOf(args[6]);
+			MAX_PERTUB  = Integer.valueOf(args[2]);
+			COEFICIENTE_TEMPERATURA = Integer.valueOf(args[3]);
 		}else{
 			/*Ler o grafo*/
 			grafo = readGrafo("instances/intance_19_4_33_3_50.txt");
@@ -144,13 +202,13 @@ public class Main {
 
 		/*Calculo da meta-heuristica*/
 		long executionTimeSA = System.currentTimeMillis();
-		simulatedAnnealing(TEMP_INIT, MAX_PERTUB, MAX_SUCCESS_BY_IT, COEFICIENTE_TEMPERATURA);
+		simulatedAnnealing(TEMP_INIT, MAX_PERTUB, COEFICIENTE_TEMPERATURA);
 		executionTimeSA = System.currentTimeMillis() - executionTimeSA;
 
 		/*Exibe os resultados*/
-		showResults(executionTimeSI, executionTimeSA);
+//		showResults(executionTimeSI, executionTimeSA);
 		
-//		showResultsSimple(executionTimeSI, executionTimeSA);
+		showResultsSimple(executionTimeSI, executionTimeSA);
 		
 	}
 
@@ -176,7 +234,7 @@ public class Main {
 		//Se é um tour completo
 		if(level == grafo.getVertices().size()-1){
 			sizeBS++;
-			int current_cost = calculateCost(S0);
+			int current_cost = calcCost(S0);
 			if(current_cost < min_cost_bestVS){
 				bestVS = S0.clone();
 				min_cost_bestVS = current_cost;
@@ -227,7 +285,7 @@ public class Main {
 	 * @param tour tour a ser vericado
 	 * @return o custo do tour
 	 */
-	private static int calculateCost(Vertice[] tour) {
+	private static int calcCost(Vertice[] tour) {
 		int cost = 0;
 		for (int i = 0; i < tour.length; i++){
 			cost += grafo.getCostMatrix(tour[i].getId(),(tour[(i+1)% tour.length].getId()));
@@ -247,15 +305,15 @@ public class Main {
 		for (int i = 0; i < S0.length; i++) {
 			System.out.print(S0[i].getId()+1+""+S0[i].getCor().name().charAt(0)+" ");
 		}
-		System.out.print("= "+calculateCost(S0));
+		System.out.print("= "+calcCost(S0));
 		System.out.println(" : "+executionTimeSI/1000.0+"s");
 		
 
 		System.out.println("Solution: ");
-		for (int i = 0; i < soulucao.length; i++) {
-			System.out.print(soulucao[i].getId()+1+""+soulucao[i].getCor().name().charAt(0)+" ");
+		for (int i = 0; i < bestGlobal.length; i++) {
+			System.out.print(bestGlobal[i].getId()+1+""+bestGlobal[i].getCor().name().charAt(0)+" ");
 		}
-		System.out.print("= "+calculateCost(soulucao));
+		System.out.print("= "+calcCost(bestGlobal));
 		System.out.println(" : "+executionTimeSA/1000.0+"s");
 		long totaltime = executionTimeSI+executionTimeSA;
 		System.out.println("\nN: "+grafo.getVertices().size()+" Time: "+totaltime/1000.0+" Branco: "+grafo.getMaxVerticeWhite()+" Preto: "+grafo.getMaxVerticeBlack());
@@ -272,8 +330,8 @@ public class Main {
 		long totaltime = executionTimeSI+executionTimeSA;
 		
 		System.out.println(grafo.getVertices().size()+"\t"+
-						   calculateCost(S0)+"\t"+
-						   calculateCost(soulucao)+"\t"+
+						   calcCost(S0)+"\t"+
+						   calcCost(bestGlobal)+"\t"+
 						   executionTimeSI+"\t"+
 						   executionTimeSA+"\t"+
 						   totaltime);
