@@ -23,13 +23,17 @@ public class Main {
 	static Vertice[] bestVS;
 	static int min_cost_bestVS = Integer.MAX_VALUE;
 	private static int BEST_SOLUCOES_INICIAIS_TEST = 1;
+	
+	private static long perturbationTime = 0;
+	private static long verifyColorTime = 0;
+	private static long calcCostTime = 0;
+
+	private static long verifyColorFalseTime =0;
 		
 	/**
 	 * Metaheuristica simulated Annealing
-	 * @param S0 Solução inicial
 	 * @param T Temperatura inicial
 	 * @param maxPetb máximo de pertubações aplicada em uma iteração
-	 * @param maxSucsIt quantidade de sucessos desejados por iteração
 	 * @param coefTemp coeficiente de diminuição de temperatura
 	 */
 	static void simulatedAnnealing(int T, int maxPetb, int coefTemp){
@@ -39,7 +43,8 @@ public class Main {
 		
 		bestGlobal = S0.clone();
 		int costBestGlobal = calcCost(S0);
-		int calcSCurrent =  calcCost(S0);
+		int calcSCurrent =  costBestGlobal;
+		
 		/*Enquanto Temperatura maior que 0*/
 		for( ; T > 0; T -= coefTemp){
 
@@ -47,18 +52,20 @@ public class Main {
 			for(int i = 0; i < maxPetb; i++){
 				
 				/*Pertuba a solução corrente*/
-				Vertice[] Si = perturbation(sCurrent, T/tInit*(1.0));
+				Vertice[] Si = perturbationSimple(sCurrent);
 				
 				/*Diferença da solução pertubada com a solução corrente*/
 				int calcSI = calcCost(Si);
 				int Fi = calcSI - calcSCurrent; 
 				
-				double x = (((calcCost(sCurrent)*0.001)/Fi) * T/tInit); 
+				double accept = (((calcCost(sCurrent)*0.001)/Fi) * T/tInit); 
 				
 				/*Verifica se melhorou ou dependendo da temperatura, aceita-se uma piora*/
-				if ((Fi != 0) && ((Fi < 0) || (x > rand.nextDouble()))){ 
+				if ((Fi != 0) && ((Fi < 0) || (accept > rand.nextDouble()))){ 
 					sCurrent = Si;
 					calcSCurrent = calcSI;
+					
+					//Apesar de aceitação de pioras, matem-se um melhor global
 					if(calcSI < costBestGlobal){
 						costBestGlobal = calcSI;
 						bestGlobal = Si.clone();
@@ -74,7 +81,12 @@ public class Main {
 	 * @param s2 solução corrente
 	 * @return outro vetor com o resultado da pertubação
 	 */
-	private static Vertice[] perturbation(Vertice[] s2, double shaking) {
+	
+	
+
+
+	private static Vertice[] perturbationSimple(Vertice[] s2) {
+		long executionTime = System.currentTimeMillis();
 		
 		Vertice[] s = s2.clone();
 		
@@ -94,6 +106,7 @@ public class Main {
 				
 				/*Retorna se a restrição de cor for válida*/
 				if (verifyColor(s, s.length-1)){
+					perturbationTime += System.currentTimeMillis() - executionTime;
 					return s;
 				}
 			}
@@ -106,26 +119,23 @@ public class Main {
 	 * @param s2 solução corrente
 	 * @return outro vetor com o resultado da pertubação
 	 */
-	private static Vertice[] perturbation2(Vertice[] s2, double shaking) {
+	@SuppressWarnings("unused")
+	private static Vertice[] perturbationWithRange(Vertice[] s2, double shaking) {
 		
 		Vertice[] s = s2.clone();
 		
-		
-		
-		int n = s.length;
-		
 		int range = (int) (shaking*(s.length)+1);
-
+		
 		int a, b;
 		
 		while(true){
 			
 			/*Escolhe dois índices do caminho aleatoriamente dentro do range*/
-			a = rand(1,n);
-			b = randInRange(n, range, a);
+			a = rand(1, s.length);
+			b = randInRange(s.length, range, a);
 			
 			/*Se forem difentes*/
-			if(a!=b){
+			if(a != b){
 				
 				/*Troca os vértices de índice a e b*/
 				swap(s, a, b);
@@ -206,9 +216,9 @@ public class Main {
 		executionTimeSA = System.currentTimeMillis() - executionTimeSA;
 
 		/*Exibe os resultados*/
-//		showResults(executionTimeSI, executionTimeSA);
+		showResults(executionTimeSI, executionTimeSA);
 		
-		showResultsSimple(executionTimeSI, executionTimeSA);
+//		showResultsSimple(executionTimeSI, executionTimeSA);
 		
 	}
 
@@ -264,6 +274,7 @@ public class Main {
 	 * @return validade do tour
 	 */
 	private static boolean verifyColor(Vertice[] currentS, int level) {
+		long executionTime = System.currentTimeMillis();
 		int p = 0;
 		int b = 0;
 		for(int i = 0; i <= level; i++){
@@ -274,9 +285,14 @@ public class Main {
 				p++;
 				b=0;
 			}
-			if (p > 1 && grafo.getCostMatrix(currentS[i-1].getId(), currentS[i].getId()) > grafo.getMaxVerticeBlack()) return false;
-			if(b > grafo.getMaxVerticeWhite()) return false;
+			if (p > 1 && grafo.getCostMatrix(currentS[i-1].getId(), currentS[i].getId()) > grafo.getMaxVerticeBlack() 
+					|| b > grafo.getMaxVerticeWhite() ){
+				verifyColorTime += System.currentTimeMillis() - executionTime;
+				return false;
+			}
+			
 		}
+		verifyColorFalseTime += System.currentTimeMillis() - executionTime;
 		return true;
 	}
 	
@@ -286,10 +302,13 @@ public class Main {
 	 * @return o custo do tour
 	 */
 	private static int calcCost(Vertice[] tour) {
+		long executionTime = System.currentTimeMillis();
+		
 		int cost = 0;
 		for (int i = 0; i < tour.length; i++){
 			cost += grafo.getCostMatrix(tour[i].getId(),(tour[(i+1)% tour.length].getId()));
 		}
+		calcCostTime += System.currentTimeMillis() - executionTime;
 		return cost;
 	}
 	
@@ -328,12 +347,14 @@ public class Main {
 	private static void showResultsSimple(long executionTimeSI, long executionTimeSA) {
 		
 		long totaltime = executionTimeSI+executionTimeSA;
-		
 		System.out.println(grafo.getVertices().size()+"\t"+
 						   calcCost(S0)+"\t"+
 						   calcCost(bestGlobal)+"\t"+
 						   executionTimeSI+"\t"+
-						   executionTimeSA+"\t"+
+						   verifyColorTime+"\t"+
+						   verifyColorFalseTime+"\t"+
+						   calcCostTime+"\t"+
+						   perturbationTime+"\t"+
 						   totaltime);
 	}
 	
