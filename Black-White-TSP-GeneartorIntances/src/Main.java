@@ -68,7 +68,7 @@ public class Main {
 		out += MAX_SEQUENCE_WHITE + " " + MAX_COST_BLACK+"\n";
 		out += result.getPrint();
 		
-		String nameFile = "intance_"+MAX_INSTANCE+"_"+MAX_SEQUENCE_WHITE+"_"+MAX_COST_BLACK+"_"+RAND_MIN_PESO+"_"+RAND_MAX_PESO+".txt";
+		String nameFile = "instance_"+MAX_INSTANCE+"_"+MAX_SEQUENCE_WHITE+"_"+MAX_COST_BLACK+"_"+RAND_MIN_PESO+"_"+RAND_MAX_PESO+".txt";
 		
 		writeFile(PATH_INSTANCE+nameFile, out);
 		namesFiles += nameFile + "\n";
